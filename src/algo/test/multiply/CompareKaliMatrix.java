@@ -21,7 +21,10 @@ public class CompareKaliMatrix {
 		
 		long  now1 = System.currentTimeMillis(); 
 		
-		ParallelMultiply parallel = new ParallelMultiply(matriksA, matriksB); 
+		int[][] matriksC = new int[matriksA.length][matriksB[0].length];  
+		
+		ParallelMultiply parallel = new ParallelMultiply(matriksA, matriksB, matriksC, 
+				matriksB.length, 0 , matriksC.length, 0, matriksC[0].length); 
 		
 		ForkJoinPool pool = new ForkJoinPool(); 
 		

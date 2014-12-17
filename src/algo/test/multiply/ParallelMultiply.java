@@ -8,15 +8,10 @@ import java.util.concurrent.RecursiveAction;
 
 public class ParallelMultiply extends RecursiveAction {
 
-	/**
-	 * 
-	 */
 
-	private static final long serialVersionUID = 1L;
-
-	static int[][] matriksA;
-	static int[][] matriksB;
-	static int[][] matriksC;
+	int[][] matriksA;
+	int[][] matriksB;
+	int[][] matriksC;
 
 	int panjangBarisA;
 	int panjangKolomB;
@@ -42,30 +37,29 @@ public class ParallelMultiply extends RecursiveAction {
 	int akhirBaris;
 	int akhirKolom;
 
-	static int dimensiTengah;
+	int dimensiTengah;
 
-	public ParallelMultiply(int[][] matA, int[][] matB) {
 
-		matriksA = matA;
-		matriksB = matB;
-
-		matriksC = new int[matA.length][matB[0].length]; 
-
-		dimensiTengah = matB.length;
-		
-		awalBaris = 0;
-		awalKolom = 0; 
-		akhirBaris = matriksC.length;
-		akhirKolom = matriksC[0].length; 
-	}
-
-	public ParallelMultiply(int awalBaris, int akhirBaris, int awalKolom,
+	public ParallelMultiply(int[][] matriksA, int[][] matriksB, int[][] matriksC, 
+			int dimensiTengah, 
+			int awalBaris, int akhirBaris, int awalKolom,
 			int akhirKolom) {
+		
+		
+		this.matriksA = matriksA; 
+		this.matriksB = matriksB; 
+		this.matriksC = matriksC; 
+		
 		this.awalBaris = awalBaris;
 		this.awalKolom = awalKolom;
 		this.akhirBaris = akhirBaris;
 		this.akhirKolom = akhirKolom;
 
+		this.dimensiTengah = dimensiTengah;
+		
+		this.matriksA = matriksA;
+//		this.matriksB = ma
+		
 	}
 
 	public void multiply(int barisA, int kolomB) {
@@ -118,41 +112,50 @@ public class ParallelMultiply extends RecursiveAction {
 			return;
 
 		} else if (halfBaris <= limit && halfKolom > limit) { // split over row
+	
+			ParallelMultiply p2 = new ParallelMultiply(matriksA, matriksB,
+					matriksC, dimensiTengah, awalBaris, akhirBaris, awalKolom,
+					halfKolom);
 
-			ParallelMultiply p2 = new ParallelMultiply(
-
-			awalBaris, akhirBaris, awalKolom, halfKolom);
-
-			ParallelMultiply p4 = new ParallelMultiply(
-
-			awalBaris, akhirBaris, halfKolom, akhirKolom);
-
+			ParallelMultiply p4 = new ParallelMultiply(matriksA, matriksB,
+					matriksC, dimensiTengah, awalBaris, akhirBaris, halfKolom,		
+					akhirKolom);
+			
 			invokeAll(p2, p4);
 
 		} else if (halfKolom <= limit && halfBaris > limit) { // split over
 																// baris
-
 			ParallelMultiply p1 = new ParallelMultiply(
+					matriksA, matriksB,matriksC, dimensiTengah,
+					awalBaris, halfBaris, awalKolom, akhirKolom);
 
-			awalBaris, halfBaris, awalKolom, akhirKolom);
-
-			ParallelMultiply p3 = new ParallelMultiply(halfBaris, akhirBaris,
+			ParallelMultiply p3 = new ParallelMultiply(
+					matriksA, matriksB, matriksC, 
+					dimensiTengah, halfBaris, akhirBaris,
 					awalKolom, akhirKolom);
 
 			invokeAll(p1, p3);
 
 		} else if (halfKolom > limit && halfBaris > limit) {
 
-			ParallelMultiply p1 = new ParallelMultiply(awalBaris, halfBaris,
+			ParallelMultiply p1 = new ParallelMultiply(
+					matriksA, matriksB, matriksC, dimensiTengah,
+					awalBaris, halfBaris,
 					awalKolom, halfKolom); // kuadran 1
 
-			ParallelMultiply p2 = new ParallelMultiply(halfBaris, akhirBaris,
+			ParallelMultiply p2 = new ParallelMultiply(
+					matriksA, matriksB,matriksC, dimensiTengah, 
+					halfBaris, akhirBaris,
 					awalKolom, halfKolom); // kuadran 2
 
-			ParallelMultiply p3 = new ParallelMultiply(awalBaris, halfBaris,
+			ParallelMultiply p3 = new ParallelMultiply(
+					matriksA, matriksB, matriksC , dimensiTengah,
+					awalBaris, halfBaris,
 					halfKolom, akhirKolom); // kuadran 3
 
-			ParallelMultiply p4 = new ParallelMultiply(halfBaris, akhirBaris,
+			ParallelMultiply p4 = new ParallelMultiply(
+					matriksA, matriksB, matriksC, dimensiTengah, 
+					halfBaris, akhirBaris,
 					halfKolom, akhirKolom); // kuadran 4
 
 			invokeAll(p1, p2, p3, p4);
