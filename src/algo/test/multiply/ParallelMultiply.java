@@ -96,7 +96,7 @@ public class ParallelMultiply  extends RecursiveAction{
 
 			return;
 
-		} else if (limitBaris <= limit && limitKolom > limit) { // split over row
+		} else if (limitBaris <= limit && limitKolom > limit) { // split over column
 
 			ParallelMultiply p2 = new ParallelMultiply(matriksA, matriksB,
 					matriksC, dimensiTengah, awalBaris, akhirBaris, awalKolom,
@@ -109,7 +109,7 @@ public class ParallelMultiply  extends RecursiveAction{
 			invokeAll(p2, p4);
 
 		} else if (limitKolom <= limit && limitBaris > limit) { // split over
-																// baris
+																// row 
 			
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB,matriksC, 
@@ -125,7 +125,7 @@ public class ParallelMultiply  extends RecursiveAction{
 
 			invokeAll(p1, p3);
 
-		} else if (halfKolom > limit && halfBaris > limit) {
+		} else if (halfKolom > limit && halfBaris > limit) { // split to 4 quadran
 
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB, matriksC, dimensiTengah,
