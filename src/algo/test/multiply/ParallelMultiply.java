@@ -125,7 +125,7 @@ public class ParallelMultiply  extends RecursiveAction{
 
 			invokeAll(p1, p3);
 
-		} else if (halfKolom > limit && halfBaris > limit) { // split to 4 quadran
+		} else if (limitKolom > limit && limitBaris > limit) { // split to 4 quadran
 
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB, matriksC, dimensiTengah,

@@ -108,7 +108,7 @@ public class RecursiveMatrixMultiplication {
 
 				invokeAll(p1, p3);
 
-			} else if (halfKolom > limit && halfBaris > limit) { // split to 4 quadran
+			} else if (limitKolom > limit && limitKolom > limit) { // split to 4 quadran
 
 				RecursiveMatrixMultiplication p1 = new RecursiveMatrixMultiplication(
 						matriksA, matriksB, matriksC, dimensiTengah,

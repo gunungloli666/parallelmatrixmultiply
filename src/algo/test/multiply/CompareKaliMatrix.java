@@ -11,7 +11,7 @@ public class CompareKaliMatrix {
 		Writer.openWriter(); 
 		
 		int[][] matriksA = generateMatriks(1000, 600); 
-		int[][] matriksB = generateMatriks(600, 900); 
+		int[][] matriksB = generateMatriks(600, 9000); 
 		
 		long now = System.nanoTime(); 
 		
