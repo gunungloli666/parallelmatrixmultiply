@@ -10,8 +10,8 @@ public class CompareKaliMatrix {
 		
 		Writer.openWriter(); 
 		
-		int[][] matriksA = generateMatriks(20, 10); 
-		int[][] matriksB = generateMatriks(10, 30); 
+		int[][] matriksA = generateMatriks(200, 100); 
+		int[][] matriksB = generateMatriks(100, 70); 
 		
 		long now = System.currentTimeMillis(); 
 		
@@ -26,11 +26,11 @@ public class CompareKaliMatrix {
 		ParallelMultiply parallel = new ParallelMultiply(matriksA, matriksB, matriksC, 
 				matriksB.length, 0 , matriksC.length, 0, matriksC[0].length); 
 //		
-//		ForkJoinPool pool = new ForkJoinPool(); 
+		ForkJoinPool pool = new ForkJoinPool(); 
 //		
-		parallel.invoke();
+//		parallel.invoke();
 		
-//		pool.invoke(parallel); 
+		pool.invoke(parallel); 
 		
 		now1 = (System.currentTimeMillis() - now1) / 1000; 
 

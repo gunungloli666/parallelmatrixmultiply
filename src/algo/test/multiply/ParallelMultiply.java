@@ -1,12 +1,12 @@
 package algo.test.multiply;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+//import java.io.BufferedWriter;
+//import java.io.File;
+//import java.io.FileWriter;
+//import java.io.IOException;
 import java.util.concurrent.RecursiveAction;
 
-public class ParallelMultiply  {
+public class ParallelMultiply  extends RecursiveAction{
 
 
 	int[][] matriksA;
@@ -56,9 +56,6 @@ public class ParallelMultiply  {
 
 		this.dimensiTengah = dimensiTengah;
 		
-		this.matriksA = matriksA;
-//		this.matriksB = ma
-		
 	}
 
 	public void multiply(int barisA, int kolomB) {
@@ -89,68 +86,33 @@ public class ParallelMultiply  {
 		}
 	}
 	
-	public void invoke(){
+	/*public void invoke(){
 		System.out.println("FISRT INVOKE"); 
 		invoke(this); 
-	}
+	}*/
 	
-//	@Override
+	@Override
 	protected void compute() {
 		
-		int limit = 4;
+		int limit = 100;
 		
 		int limitKolom = (int) (Math.floor( ((awalKolom  - akhirKolom) / 2)));
 		
 		int limitBaris = (int) (Math.floor( ((akhirBaris - awalBaris) / 2)));
-		
 		
 		int halfBaris = awalBaris + limitBaris; 
 
 		int halfKolom = awalKolom + limitKolom;
 		
 
-
-//		String output = "half baris dan half kolom: " + halfBaris + "|"
-//				+ halfKolom + "|" + awalBaris + "|" + "|" + akhirBaris + "|"
-//				+ awalKolom + "|" + akhirKolom;
-//
-		 try {
- 
-			 Writer.getBuff().write(halfBaris + "|" + halfKolom + "\n"); 
-			 Writer.getBuff().write(awalBaris + "|" + akhirBaris + "\n"); 
-			 Writer.getBuff().write(awalKolom + "|" + akhirKolom + "\n"); 
-				
-			 Writer.getBuff().write("===================" + "\n"); 
-			 
-		 } catch (IOException e) {
-			 e.printStackTrace();
-		 }
-
 		if (limitKolom <= limit && limitBaris <= limit) {
 
-			computeDirectly(this.awalBaris, this.akhirBaris, this. awalKolom, this.akhirKolom);
+			computeDirectly(awalBaris, akhirBaris, awalKolom, akhirKolom);
 
-			 try {
-				 
-				 Writer.getBuff().write("compute directly" + "\n"); 
-				 Writer.getBuff().write("==================" + "\n"); 
-				 
-			 } catch (IOException e) {
-				 e.printStackTrace();
-			 }
 			return;
 
 		} else if (limitBaris <= limit && limitKolom > limit) { // split over row
 
-			try {
-
-				Writer.getBuff().write("kasus 1" + "\n");
-				 Writer.getBuff().write("==================" + "\n"); 
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
 			ParallelMultiply p2 = new ParallelMultiply(matriksA, matriksB,
 					matriksC, dimensiTengah, awalBaris, akhirBaris, awalKolom,
 					halfKolom);
@@ -159,22 +121,13 @@ public class ParallelMultiply  {
 					matriksC, dimensiTengah, awalBaris, akhirBaris, halfKolom,		
 					akhirKolom);
 			
-//			invokeAll(p2, p4);
+			invokeAll(p2, p4);
 			
-			invoke(p2,p4);
+//			invoke(p2,p4);
 
 
 		} else if (limitKolom <= limit && limitBaris > limit) { // split over
 																// baris
-			
-			try {
-
-				Writer.getBuff().write("kasus 2" + "\n");
-				 Writer.getBuff().write("==================" + "\n"); 
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB,matriksC, 
@@ -188,22 +141,12 @@ public class ParallelMultiply  {
 					halfBaris, akhirBaris,
 					awalKolom, akhirKolom);
 
-//			invokeAll(p1, p3);
+			invokeAll(p1, p3);
 			
-			invoke(p1,p3); 
+//			invoke(p1,p3); 
 
 		} else if (halfKolom > limit && halfBaris > limit) {
 
-			try {
-
-				Writer.getBuff().write("kasus 3" + "\n");
-				 Writer.getBuff().write("==================" + "\n"); 
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB, matriksC, dimensiTengah,
 					awalBaris, halfBaris,
@@ -224,9 +167,9 @@ public class ParallelMultiply  {
 					halfBaris, akhirBaris,
 					halfKolom, akhirKolom); // kuadran 4
 
-//			invokeAll(p1, p2, p3, p4);
+			invokeAll(p1, p2, p3, p4);
 			
-			invoke(p1,p2,p3,p4);
+//			invoke(p1,p2,p3,p4);
 
 		}
 
