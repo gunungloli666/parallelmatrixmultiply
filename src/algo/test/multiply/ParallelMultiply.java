@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.RecursiveAction;
 
-public class ParallelMultiply extends RecursiveAction {
+public class ParallelMultiply  {
 
 
 	int[][] matriksA;
@@ -45,7 +45,6 @@ public class ParallelMultiply extends RecursiveAction {
 			int awalBaris, int akhirBaris, int awalKolom,
 			int akhirKolom) {
 		
-		
 		this.matriksA = matriksA; 
 		this.matriksB = matriksB; 
 		this.matriksC = matriksC; 
@@ -82,37 +81,76 @@ public class ParallelMultiply extends RecursiveAction {
 			}
 		}
 	}
-
-	@Override
+	
+	
+	private  void invoke(ParallelMultiply... p1 ){
+		for(ParallelMultiply p : p1){
+			p.compute();
+		}
+	}
+	
+	public void invoke(){
+		System.out.println("FISRT INVOKE"); 
+		invoke(this); 
+	}
+	
+//	@Override
 	protected void compute() {
-
+		
 		int limit = 4;
+		
+		int limitKolom = (int) (Math.floor( ((awalKolom  - akhirKolom) / 2)));
+		
+		int limitBaris = (int) (Math.floor( ((akhirBaris - awalBaris) / 2)));
+		
+		
+		int halfBaris = awalBaris + limitBaris; 
 
-		int halfBaris = (int) (Math.floor(awalBaris
-				+ ((akhirBaris - awalBaris) / 2)));
+		int halfKolom = awalKolom + limitKolom;
+		
 
-		int halfKolom = (int) (Math.floor(awalKolom
-				+ ((akhirKolom - awalKolom) / 2)));
 
-		String output = "half baris dan half kolom: " + halfBaris + "|"
-				+ halfKolom + "|" + awalBaris + "|" + "|" + akhirBaris + "|"
-				+ awalKolom + "|" + akhirKolom;
-
+//		String output = "half baris dan half kolom: " + halfBaris + "|"
+//				+ halfKolom + "|" + awalBaris + "|" + "|" + akhirBaris + "|"
+//				+ awalKolom + "|" + akhirKolom;
+//
 		 try {
-		 Writer.getBuff().write(output +"\n");
+ 
+			 Writer.getBuff().write(halfBaris + "|" + halfKolom + "\n"); 
+			 Writer.getBuff().write(awalBaris + "|" + akhirBaris + "\n"); 
+			 Writer.getBuff().write(awalKolom + "|" + akhirKolom + "\n"); 
+				
+			 Writer.getBuff().write("===================" + "\n"); 
+			 
 		 } catch (IOException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
+			 e.printStackTrace();
 		 }
 
-		if (halfBaris <= limit && halfKolom <= limit) {
+		if (limitKolom <= limit && limitBaris <= limit) {
 
-			computeDirectly(awalBaris, akhirBaris, awalKolom, akhirKolom);
+			computeDirectly(this.awalBaris, this.akhirBaris, this. awalKolom, this.akhirKolom);
 
+			 try {
+				 
+				 Writer.getBuff().write("compute directly" + "\n"); 
+				 Writer.getBuff().write("==================" + "\n"); 
+				 
+			 } catch (IOException e) {
+				 e.printStackTrace();
+			 }
 			return;
 
-		} else if (halfBaris <= limit && halfKolom > limit) { // split over row
-	
+		} else if (limitBaris <= limit && limitKolom > limit) { // split over row
+
+			try {
+
+				Writer.getBuff().write("kasus 1" + "\n");
+				 Writer.getBuff().write("==================" + "\n"); 
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			ParallelMultiply p2 = new ParallelMultiply(matriksA, matriksB,
 					matriksC, dimensiTengah, awalBaris, akhirBaris, awalKolom,
 					halfKolom);
@@ -121,23 +159,51 @@ public class ParallelMultiply extends RecursiveAction {
 					matriksC, dimensiTengah, awalBaris, akhirBaris, halfKolom,		
 					akhirKolom);
 			
-			invokeAll(p2, p4);
+//			invokeAll(p2, p4);
+			
+			invoke(p2,p4);
 
-		} else if (halfKolom <= limit && halfBaris > limit) { // split over
+
+		} else if (limitKolom <= limit && limitBaris > limit) { // split over
 																// baris
+			
+			try {
+
+				Writer.getBuff().write("kasus 2" + "\n");
+				 Writer.getBuff().write("==================" + "\n"); 
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			ParallelMultiply p1 = new ParallelMultiply(
-					matriksA, matriksB,matriksC, dimensiTengah,
-					awalBaris, halfBaris, awalKolom, akhirKolom);
+					matriksA, matriksB,matriksC, 
+					dimensiTengah,
+					awalBaris, halfBaris, 
+					awalKolom, akhirKolom);
 
 			ParallelMultiply p3 = new ParallelMultiply(
 					matriksA, matriksB, matriksC, 
-					dimensiTengah, halfBaris, akhirBaris,
+					dimensiTengah, 
+					halfBaris, akhirBaris,
 					awalKolom, akhirKolom);
 
-			invokeAll(p1, p3);
+//			invokeAll(p1, p3);
+			
+			invoke(p1,p3); 
 
 		} else if (halfKolom > limit && halfBaris > limit) {
 
+			try {
+
+				Writer.getBuff().write("kasus 3" + "\n");
+				 Writer.getBuff().write("==================" + "\n"); 
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
 			ParallelMultiply p1 = new ParallelMultiply(
 					matriksA, matriksB, matriksC, dimensiTengah,
 					awalBaris, halfBaris,
@@ -158,7 +224,9 @@ public class ParallelMultiply extends RecursiveAction {
 					halfBaris, akhirBaris,
 					halfKolom, akhirKolom); // kuadran 4
 
-			invokeAll(p1, p2, p3, p4);
+//			invokeAll(p1, p2, p3, p4);
+			
+			invoke(p1,p2,p3,p4);
 
 		}
 
