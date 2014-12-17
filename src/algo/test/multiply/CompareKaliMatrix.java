@@ -10,29 +10,27 @@ public class CompareKaliMatrix {
 		
 		Writer.openWriter(); 
 		
-		int[][] matriksA = generateMatriks(200, 100); 
-		int[][] matriksB = generateMatriks(100, 70); 
+		int[][] matriksA = generateMatriks(1000, 600); 
+		int[][] matriksB = generateMatriks(600, 900); 
 		
-		long now = System.currentTimeMillis(); 
+		long now = System.nanoTime(); 
 		
 		int[][] matriksResultA = multiplyDirectly(matriksA, matriksB); 
 		
-		now = (System.currentTimeMillis() - now) / 1000; 
+		now = (System.nanoTime() - now) / 1000000; 
 		
-		long  now1 = System.currentTimeMillis(); 
+		long  now1 = System.nanoTime(); 
 		
 		int[][] matriksC = new int[matriksA.length][matriksB[0].length];  
 		
 		ParallelMultiply parallel = new ParallelMultiply(matriksA, matriksB, matriksC, 
 				matriksB.length, 0 , matriksC.length, 0, matriksC[0].length); 
-//		
-		ForkJoinPool pool = new ForkJoinPool(); 
-//		
-//		parallel.invoke();
 		
+		ForkJoinPool pool = new ForkJoinPool(); 
+
 		pool.invoke(parallel); 
 		
-		now1 = (System.currentTimeMillis() - now1) / 1000; 
+		now1 = (System.nanoTime() - now1) / 1000000; 
 
 		int[][] matriksResultB = parallel.getResult(); 
 		
@@ -44,23 +42,11 @@ public class CompareKaliMatrix {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		try {
-			printMatriks(matriksResultA);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		try {
-			printMatriks(matriksResultB);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		
 		
 		System.out.println(now); 
 		System.out.println(now1);
 		System.out.println("FINISH"); 
-		
 		
 		Writer.closeWriter();
 	}

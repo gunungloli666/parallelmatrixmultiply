@@ -1,9 +1,5 @@
 package algo.test.multiply;
 
-//import java.io.BufferedWriter;
-//import java.io.File;
-//import java.io.FileWriter;
-//import java.io.IOException;
 import java.util.concurrent.RecursiveAction;
 
 public class ParallelMultiply  extends RecursiveAction{
@@ -70,7 +66,7 @@ public class ParallelMultiply  extends RecursiveAction{
 		return matriksC;
 	}
 
-	public void computeDirectly(int awalBaris, int akhirBaris, int awalKolom,
+	private void computeDirectly(int awalBaris, int akhirBaris, int awalKolom,
 			int akhirKolom) {
 		for (int i = awalBaris; i < akhirBaris; i++) {
 			for (int j = awalKolom; j < akhirKolom; j++) {
@@ -80,21 +76,10 @@ public class ParallelMultiply  extends RecursiveAction{
 	}
 	
 	
-	private  void invoke(ParallelMultiply... p1 ){
-		for(ParallelMultiply p : p1){
-			p.compute();
-		}
-	}
-	
-	/*public void invoke(){
-		System.out.println("FISRT INVOKE"); 
-		invoke(this); 
-	}*/
-	
 	@Override
 	protected void compute() {
 		
-		int limit = 100;
+		int limit = 10;
 		
 		int limitKolom = (int) (Math.floor( ((awalKolom  - akhirKolom) / 2)));
 		
@@ -122,9 +107,6 @@ public class ParallelMultiply  extends RecursiveAction{
 					akhirKolom);
 			
 			invokeAll(p2, p4);
-			
-//			invoke(p2,p4);
-
 
 		} else if (limitKolom <= limit && limitBaris > limit) { // split over
 																// baris
@@ -142,8 +124,6 @@ public class ParallelMultiply  extends RecursiveAction{
 					awalKolom, akhirKolom);
 
 			invokeAll(p1, p3);
-			
-//			invoke(p1,p3); 
 
 		} else if (halfKolom > limit && halfBaris > limit) {
 
@@ -169,8 +149,6 @@ public class ParallelMultiply  extends RecursiveAction{
 
 			invokeAll(p1, p2, p3, p4);
 			
-//			invoke(p1,p2,p3,p4);
-
 		}
 
 	}

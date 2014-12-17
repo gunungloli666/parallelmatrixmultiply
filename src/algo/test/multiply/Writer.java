@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.Buffer;
+import java.net.URL;
 
 public class Writer {
 
@@ -12,7 +12,7 @@ public class Writer {
 	
 	public static void openWriter(){
 			try {
-				buff = new BufferedWriter(new FileWriter(new File("D:/out.txt")));
+				buff = new BufferedWriter(new FileWriter(new File("./out.txt" )));
 			} catch (IOException e) {
 				e.printStackTrace();
 				closeWriter();
